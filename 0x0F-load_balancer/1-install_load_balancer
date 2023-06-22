@@ -1,40 +1,34 @@
 #!/usr/bin/env bash
-#Installs and configures HAproxy in a load balancer server
+# Install and configure HAproxy on your lb-01 server.
+#	Configure HAproxy so that it send traffic to web-01 and web-02
+#	Distribute requests using a roundrobin algorithm
+#	Make sure that HAproxy can be managed via an init script
+#	Configure servers with the right hostnames: [STUDENT_ID]-web-01 and [STUDENT_ID]-web-02.
 
-apt-get install -y software-properties-common
-add-apt-repository -y ppa:vbernat/haproxy-2.6
-apt-get update
-apt-get install -y haproxy=2.6.\*
+# Update sys
+sudo apt-get -y update
 
-echo "ENABLED=1" >> /etc/default/haproxy
-mv /etc/haproxy/haproxy.cfg{,.original}
-touch /etc/haproxy/haproxy.cfg
+# Install HAproxy
+sudo apt-get -y install haproxy
 
-printf %s "global
-    log 127.0.0.1 local0 notice
-    maxconn 2000
-    user haproxy
-    group haproxy
-defaults
-    log     global
-    mode    http
-    option  httplog
-    option  dontlognull
-    retries 3
-    option redispatch
-    timeout connect  5000
-    timeout client  10000
-    timeout server  10000
-listen hbnb
-    bind 0.0.0.0:80
-    mode http
-    stats enable
-    stats uri /haproxy?stats
-    balance roundrobin
-    option httpclose
-    option forwardfor
-    server 69833-web-01 52.91.146.226:80 check
-    server 69833-web-02 18.204.10.251:80 check
-" >> /etc/haproxy/haproxy.cfg
+# Server config
+server_config=\
+"
+frontend http
+        bind 0:80
+	mode http
+        default_backend web_servers
 
-service haproxy start
+backend web_servers
+        balance roundrobin
+	server 117617-web-01 35.174.200.91:80
+        server 117617-web-02 35.153.79.121:80
+"
+
+echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
+
+# Enable HAproxy init script
+sudo sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/haproxy
+
+#Restart HAproxy Server
+sudo service haproxy restart
