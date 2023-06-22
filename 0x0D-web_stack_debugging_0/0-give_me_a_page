@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
-# Run Apache on the 265-0 Docker container.
-echo "ServerName localhost" >> /etc/apache2.conf
+<<<<<<< HEAD
+#Start Apache Service
 service apache2 start
+=======
+# Start Apache Service
+sudo service apache2 start
+>>>>>>> bb8485a35646ffa1ad40e545c220a2c1dac04e4a
