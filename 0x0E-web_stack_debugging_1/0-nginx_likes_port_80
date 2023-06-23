@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-#Restores the default server port 80 on Nginx server
-#Delete the existing ../sites-enabled/default and replace it with a symbolic copy. 
+# Configures an Nginx server to listen on port 80.
+
 rm /etc/nginx/sites-enabled/default
 ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 service nginx restart
