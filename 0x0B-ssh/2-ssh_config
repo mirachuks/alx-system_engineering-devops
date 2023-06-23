@@ -1,4 +1,6 @@
-# SSH Clienf Configuration File
-Host 54.166.128.122
-    IdentityFile ~/.ssh/school
-    PasswordAuthentification no
+# This configuration allows a local SSH client connect to a server without 
+# -- typing a password.
+
+Host *
+      PasswordAuthentication no
+      IdentifyFile ~/.ssh/school
